@@ -17,10 +17,28 @@ func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
 		flags = append(flags, "--"+f.Long)
 	}
 
+// 	// Returns filenames and directories, appending a slash to directory names
+// 	// Note that -o nospace means you don't get a space after a directory's /. For normal files we added a space at the end with sed.
+// 	// from https://stackoverflow.com/a/40227233
+// 	builder.WriteString(`# Returns filenames and directories, appending a slash to directory names.
+// _mycmd_compgen_filenames() {
+//     local cur="$1"
+//
+//     # Files, excluding directories:
+//     grep -v -F -f <(compgen -d -P ^ -S '$' -- "$cur") \
+//         <(compgen -f -P ^ -S '$' -- "$cur") |
+//         sed -e 's/^\^//' -e 's/\$$/ /'
+//
+//     # Directories:
+//     compgen -d -S / -- "$cur"
+// }
+// `)
+
 	fmt.Fprintf(builder, `%[1]sfunction _%[2]s {
-%[1]s    local cur opts
+%[1]s    local cur prev opts
 %[1]s    COMPREPLY=()
 %[1]s    cur="${COMP_WORDS[COMP_CWORD]}"
+%[1]s    prev="${COMP_WORDS[COMP_CWORD-1]}"
 %[1]s    opts="%[3]s"
 
 %[1]s    local positionals=()

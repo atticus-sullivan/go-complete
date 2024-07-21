@@ -18,8 +18,9 @@ func (mc *Completer) GenerateBash(builder *strings.Builder, indent string, progN
 	}
 
 	fmt.Fprintf(builder, `%[1]sfunction _%[2]s {
-%[1]s    local cur opts
+%[1]s    local cur prev opts
 %[1]s    cur="${COMP_WORDS[COMP_CWORD]}"
+%[1]s    prev="${COMP_WORDS[COMP_CWORD-1]}"
 %[1]s    opts="%[3]s"
 
 %[1]s    local positionals=()
@@ -36,13 +37,16 @@ func (mc *Completer) GenerateBash(builder *strings.Builder, indent string, progN
 	builder.WriteString(`        case "${COMP_WORDS[i]}" in
 `)
 	for _, f := range mc.Flags {
-		addFuncs = append(addFuncs, f.GenerateBash(builder, indent+"        ", mc.Name)...)
+		a, i := f.GenerateBash(builder, indent+"        ", mc.Name)
+		addFuncs = append(addFuncs, a...)
+		addIfs = append(addIfs, i...)
 	}
 	fmt.Fprintf(builder, `%[1]s        *)
 %[1]s            positionals+=( "${COMP_WORDS[i]}" )
 %[1]s            ;;
 %[1]s        esac
 %[1]s    done
+%[1]s    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 `, indent)
 
 	if slices.ContainsFunc(addIfs, func(x *internal.AddIfBash) bool { return x != nil }) {
