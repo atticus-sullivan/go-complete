@@ -11,7 +11,12 @@ func (f *Flag) GenerateZsh(builderArguments *strings.Builder, indent string, pro
 	builderArguments.WriteString(" \\\n")
 	builderArguments.WriteString(indent)
 	builderArguments.WriteString("+ '(")
-	builderArguments.WriteString(f.Long)
+	if f.Long != "" {
+		builderArguments.WriteString(f.Long)
+	} else {
+		// not sure if that's a good idea. Can this cause collisions?
+		builderArguments.WriteRune(f.Short)
+	}
 	builderArguments.WriteString(")'")
 
 	if f.Short != 0 {
@@ -46,7 +51,11 @@ func (f *Flag) GenerateZsh(builderArguments *strings.Builder, indent string, pro
 			builderArguments.WriteRune(']')
 		}
 		for _, arg := range f.Args {
-			addFuncs = append(addFuncs, arg.GenerateZsh(builderArguments, indent, progName)...)
+			a := arg.GenerateZsh(builderArguments, indent, progName)
+			// only append the addFuncs if they weren't already added when executing the short version
+			if f.Short == 0 {
+				addFuncs = append(addFuncs, a...)
+			}
 		}
 
 		builderArguments.WriteRune('"')

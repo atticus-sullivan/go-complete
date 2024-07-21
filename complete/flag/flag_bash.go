@@ -7,12 +7,6 @@ import (
 )
 
 func (f *Flag) GenerateBash(builder *strings.Builder, indent string, progName string) ([]*internal.AddFuncBash, []*internal.AddIfBash) {
-	if len(f.Args) > 1 {
-		// TODO not nice that this generates an error
-		// maybe we can let this silently fail instead and just always only use the first argument
-		panic("only flags with one argument are supported when generating bash completion")
-	}
-
 	addFuncs := make([]*internal.AddFuncBash, 0)
 	addIfs := make([]*internal.AddIfBash, 0)
 
@@ -33,8 +27,23 @@ func (f *Flag) GenerateBash(builder *strings.Builder, indent string, progName st
 	if len(f.Args) > 0 {
 		addIfs = append(addIfs, &internal.AddIfBash{
 			Fun: func(builder *strings.Builder, id string) {
-				fmt.Fprintf(builder, `%[1]sif [[ "${prev}" == "-%[2]c" || "${prev}" == "--%[3]s" ]] ; then
-`, id, f.Short, f.Long)
+				builder.WriteString(id)
+				builder.WriteString("if [[ ")
+				if f.Short != 0 {
+					builder.WriteString(`"${prev}" == "-`)
+					builder.WriteRune(f.Short)
+					if f.Long != "" {
+						builder.WriteString(`" || `)
+					} else {
+						builder.WriteString(`" `)
+					}
+				}
+				if f.Long != "" {
+					builder.WriteString(`"${prev}" == "--`)
+					builder.WriteString(f.Long)
+					builder.WriteString(`" `)
+				}
+				builder.WriteString("]] ; then\n")
 				builder.WriteString(id)
 				builder.WriteString("    COMPREPLY=()\n")
 				f.Args[0].GenerateBash(builder, id, progName)
