@@ -5,6 +5,7 @@ import (
 	"complete/complete/flag"
 	"complete/complete/positional"
 	"complete/complete/types"
+	"complete/internal"
 	"fmt"
 	"strings"
 )
@@ -29,13 +30,29 @@ func main() {
 						Cmds: []types.Completer{
 							{
 								Flags: []flag.Flag{
-									// {
-									// 	Short:    'h',
-									// 	Long:     "help",
-									// 	Help:     "Show help information",
-									// 	Args:     nil,
-									// 	Optional: true,
-									// },
+									{
+										Short:    'p',
+										Long:     "path",
+										Help:     "path to file to process",
+										Args:     []internal.CompleteType{
+											internal.CTfile{
+												Glob:     "\\*.yaml",
+												OnlyDirs: false,
+											},
+										},
+										Optional: true,
+									},
+									{
+										Short:    'c',
+										Long:     "color",
+										Help:     "colorful output",
+										Args:     []internal.CompleteType{
+											internal.CTalternatives{
+												Alts: []string{"hello", "world"},
+											},
+										},
+										Optional: true,
+									},
 								},
 								Positionals: []positional.Positional{},
 								Name:        "process",
@@ -60,6 +77,6 @@ func main() {
 	}
 
 	builder := strings.Builder{}
-	c.GenerateBash(&builder, "")
+	c.GenerateZsh(&builder, "")
 	fmt.Println(builder.String())
 }
