@@ -2,10 +2,10 @@ package main
 
 import (
 	"complete/complete/completer"
+	"complete/complete/completeArgs"
 	"complete/complete/flag"
 	"complete/complete/positional"
 	"complete/complete/types"
-	"complete/internal"
 	"fmt"
 	"strings"
 )
@@ -34,8 +34,8 @@ func main() {
 										Short:    'p',
 										Long:     "path",
 										Help:     "path to file to process",
-										Args:     []internal.CompleteType{
-											internal.CTfile{
+										Args:     []completeargs.CompleteType{
+											completeargs.CTfile{
 												Glob:     "\\*.yaml",
 												OnlyDirs: false,
 											},
@@ -46,8 +46,8 @@ func main() {
 										Short:    'c',
 										Long:     "color",
 										Help:     "colorful output",
-										Args:     []internal.CompleteType{
-											internal.CTalternatives{
+										Args:     []completeargs.CompleteType{
+											completeargs.CTalternatives{
 												Alts: []string{"hello", "world"},
 											},
 										},

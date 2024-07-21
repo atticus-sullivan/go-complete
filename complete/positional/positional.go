@@ -1,12 +1,12 @@
 package positional
 
 import (
-	"complete/internal"
+	"complete/complete/completeArgs"
 )
 
 type Positional struct {
 	Idx      uint
 	Help     string
-	Arg      internal.CompleteType
+	Arg      completeargs.CompleteType
 	Optional bool
 }

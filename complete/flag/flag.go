@@ -1,13 +1,13 @@
 package flag
 
 import (
-	"complete/internal"
+	"complete/complete/completeArgs"
 )
 
 type Flag struct {
 	Short    rune
 	Long     string
 	Help     string
-	Args     []internal.CompleteType
+	Args     []completeargs.CompleteType
 	Optional bool
 }
