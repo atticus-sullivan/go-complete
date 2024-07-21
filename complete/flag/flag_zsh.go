@@ -7,7 +7,12 @@ import (
 
 func (f *Flag) GenerateZsh(builderArguments *strings.Builder, indent string, progName string) []*internal.AddFuncZsh {
 
-	// problem: args is appended multiple times to add
+	builderArguments.WriteString(" \\\n")
+	builderArguments.WriteString(indent)
+	builderArguments.WriteString("+ '(")
+	builderArguments.WriteString(f.Long)
+	builderArguments.WriteString(")'")
+
 	if f.Short != 0 {
 		builderArguments.WriteString(" \\\n")
 		builderArguments.WriteString(indent)
