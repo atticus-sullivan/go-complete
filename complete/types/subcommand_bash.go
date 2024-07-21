@@ -10,9 +10,9 @@ func (ct CTsubcommands) GenerateBash(builder *strings.Builder, indent string, pr
 	add := make([]*internal.AddFuncBash, 0)
 	ifs := make([]*internal.AddIfBash, 0)
 
-	fmt.Fprintf(builder, `%[1]sif [[ ${#positionals[@]} -eq 1 ]] ; then
+	fmt.Fprintf(builder, `%[1]sif [[ ${#positionals[@]} -eq %[2]d ]] ; then
 %[1]s    case "${COMP_WORDS[i]}" in
-`, indent)
+`, indent, ct.Idx)
 
 	var cmds []string
 	for _, c := range ct.Cmds {
@@ -36,7 +36,7 @@ func (ct CTsubcommands) GenerateBash(builder *strings.Builder, indent string, pr
 %[1]s    COMPREPLY=( $(compgen -W "%[3]s ${opts}" -- ${cur}) )
 %[1]s    return 0
 %[1]sfi
-`, i, 1, cmd)
+`, i, ct.Idx, cmd)
 		},
 	})
 

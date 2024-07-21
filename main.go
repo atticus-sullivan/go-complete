@@ -27,6 +27,7 @@ func main() {
 					Idx:  0,
 					Help: "",
 					Arg: types.CTsubcommands{
+						Idx: 0,
 						Cmds: []types.Completer{
 							{
 								Flags: []flag.Flag{
@@ -77,6 +78,6 @@ func main() {
 	}
 
 	builder := strings.Builder{}
-	c.GenerateZsh(&builder, "")
+	c.GenerateBash(&builder, "")
 	fmt.Println(builder.String())
 }
