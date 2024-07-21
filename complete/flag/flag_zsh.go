@@ -6,6 +6,7 @@ import (
 )
 
 func (f *Flag) GenerateZsh(builderArguments *strings.Builder, indent string, progName string) []*internal.AddFuncZsh {
+	var addFuncs []*internal.AddFuncZsh
 
 	builderArguments.WriteString(" \\\n")
 	builderArguments.WriteString(indent)
@@ -26,7 +27,7 @@ func (f *Flag) GenerateZsh(builderArguments *strings.Builder, indent string, pro
 			builderArguments.WriteRune(']')
 		}
 		for _, arg := range f.Args {
-			arg.GenerateZsh(builderArguments, indent, progName)
+			addFuncs = append(addFuncs, arg.GenerateZsh(builderArguments, indent, progName)...)
 		}
 
 		builderArguments.WriteRune('"')
@@ -45,10 +46,10 @@ func (f *Flag) GenerateZsh(builderArguments *strings.Builder, indent string, pro
 			builderArguments.WriteRune(']')
 		}
 		for _, arg := range f.Args {
-			arg.GenerateZsh(builderArguments, indent, progName)
+			addFuncs = append(addFuncs, arg.GenerateZsh(builderArguments, indent, progName)...)
 		}
 
 		builderArguments.WriteRune('"')
 	}
-	return nil
+	return addFuncs
 }
