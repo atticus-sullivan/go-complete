@@ -37,7 +37,9 @@ func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
 	builder.WriteString(`        case "${COMP_WORDS[i]}" in
 `)
 	for _, f := range mc.Flags {
-		addFuncs = append(addFuncs, f.GenerateBash(builder, indent+"        ", mc.Name)...)
+		a, i := f.GenerateBash(builder, indent+"        ", mc.Name)
+		addFuncs = append(addFuncs, a...)
+		addIfs = append(addIfs, i...)
 	}
 	fmt.Fprintf(builder, `%[1]s        *)
 %[1]s            positionals+=( "${COMP_WORDS[i]}" )
