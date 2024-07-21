@@ -36,7 +36,7 @@ func main() {
 										Help:     "path to file to process",
 										Args:     []completeargs.CompleteType{
 											completeargs.CTfile{
-												Glob:     "\\*.yaml",
+												Glob:     "*.yaml",
 												OnlyDirs: false,
 											},
 										},
