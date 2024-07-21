@@ -13,8 +13,9 @@ func (cf CTfile) GenerateZsh(builderArguments *strings.Builder, indent string, p
 		builderArguments.WriteString("_files -f")
 	}
 	if cf.Glob != "" {
-		builderArguments.WriteString(" -g ")
+		builderArguments.WriteString(" -g '")
 		builderArguments.WriteString(cf.Glob)
+		builderArguments.WriteString("'")
 	}
 	return nil
 }
