@@ -18,6 +18,10 @@ func (mc *MainCompleter) GenerateZsh(builder *strings.Builder, indent string) {
 		return
 	}
 
+	if mc.Opts.ToFile {
+		fmt.Fprintf(builder, "#compdef _%[1]s %[1]s\n\n", name_s)
+	}
+
 	fmt.Fprintf(builder, `%[1]sfunction _%[2]s {
 %[1]s    local context state state_descr line opt_args
 %[1]s    _arguments -C :`, indent, name_s)
@@ -52,7 +56,9 @@ func (mc *MainCompleter) GenerateZsh(builder *strings.Builder, indent string) {
 
 	builder.WriteRune('}')
 	builder.WriteRune('\n')
-	fmt.Fprintf(builder, "%[1]scompdef _%[2]s %[2]s\n", indent, name_s)
+	if !mc.Opts.ToFile {
+		fmt.Fprintf(builder, "%[1]scompdef _%[2]s %[2]s\n", indent, name_s)
+	}
 
 	if slices.ContainsFunc(addFuncs, func(x *internal.AddFuncZsh) bool { return x != nil }) {
 		builder.WriteRune('\n')

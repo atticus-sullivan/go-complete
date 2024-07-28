@@ -11,4 +11,5 @@ type CompleterOpts struct {
 	OptionStacking     bool
 	OptionStackingArgs bool
 	DashSep            bool
+	ToFile             bool
 }
