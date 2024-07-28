@@ -3,6 +3,7 @@ package completeargs
 import (
 	"github.com/atticus-sullivan/go-complete/internal"
 	"strings"
+	sh "mvdan.cc/sh/v3/syntax"
 )
 
 func (cf CTfile) GenerateBash(builderArguments *strings.Builder, indent string, progName string) ([]*internal.AddFuncBash, []*internal.AddIfBash) {
@@ -13,9 +14,10 @@ func (cf CTfile) GenerateBash(builderArguments *strings.Builder, indent string, 
 		builderArguments.WriteString(`    COMPREPLY+=( $(compgen -f`)
 	}
 
-	if cf.Glob != "" {
+	s,err := sh.Quote(cf.Glob, sh.LangBash)
+	if cf.Glob != "" && err != nil {
 		builderArguments.WriteString(" -X '!")
-		builderArguments.WriteString(cf.Glob)
+		builderArguments.WriteString(s)
 		builderArguments.WriteRune('\'')
 	}
 

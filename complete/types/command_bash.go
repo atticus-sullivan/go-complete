@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	sh"mvdan.cc/sh/v3/syntax"
 )
 
 func (mc *Completer) GenerateBash(builder *strings.Builder, indent string, progName string) []*internal.AddFuncBash {
@@ -15,6 +16,12 @@ func (mc *Completer) GenerateBash(builder *strings.Builder, indent string, progN
 	for _, f := range mc.Flags {
 		flags = append(flags, "-"+string(f.Short))
 		flags = append(flags, "--"+f.Long)
+	}
+
+	name_s, err := sh.Quote(mc.Name, sh.LangBash)
+	if err != nil {
+		// TODO
+		return nil
 	}
 
 	fmt.Fprintf(builder, `%[1]sfunction _%[2]s {
@@ -28,7 +35,7 @@ func (mc *Completer) GenerateBash(builder *strings.Builder, indent string, progN
 `, indent, progName, strings.Join(flags, " "))
 
 	for _, p := range mc.Positionals {
-		a, i := p.GenerateBash(builder, indent+"        ", mc.Name)
+		a, i := p.GenerateBash(builder, indent+"        ", progName+"_"+name_s)
 		addFuncs = append(addFuncs, a...)
 		addIfs = append(addIfs, i...)
 	}
@@ -37,7 +44,7 @@ func (mc *Completer) GenerateBash(builder *strings.Builder, indent string, progN
 	builder.WriteString(`        case "${COMP_WORDS[i]}" in
 `)
 	for _, f := range mc.Flags {
-		a, i := f.GenerateBash(builder, indent+"        ", mc.Name)
+		a, i := f.GenerateBash(builder, indent+"        ", progName+"_"+name_s)
 		addFuncs = append(addFuncs, a...)
 		addIfs = append(addIfs, i...)
 	}

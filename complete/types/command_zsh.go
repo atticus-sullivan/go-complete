@@ -1,10 +1,12 @@
 package types
 
 import (
-	"github.com/atticus-sullivan/go-complete/internal"
 	"fmt"
 	"slices"
 	"strings"
+
+	"github.com/atticus-sullivan/go-complete/internal"
+	sh "mvdan.cc/sh/v3/syntax"
 )
 
 func (compl *Completer) GenerateZsh(builder *strings.Builder, indent string, progName string) []*internal.AddFuncZsh {
@@ -14,12 +16,18 @@ func (compl *Completer) GenerateZsh(builder *strings.Builder, indent string, pro
 %[1]s    local context state state_descr line opt_args
 %[1]s    _arguments -C :`, indent, progName)
 
+	name_s, err := sh.Quote(compl.Name, sh.LangBash)
+	if err != nil {
+		// TODO
+		return nil
+	}
+
 	argIndent := indent + "        "
 	for _, p := range compl.Positionals {
-		addFuncs = append(addFuncs, p.GenerateZsh(builder, argIndent, progName+"_"+compl.Name)...)
+		addFuncs = append(addFuncs, p.GenerateZsh(builder, argIndent, progName+"_"+name_s)...)
 	}
 	for _, f := range compl.Flags {
-		addFuncs = append(addFuncs, f.GenerateZsh(builder, argIndent, progName+"_"+compl.Name)...)
+		addFuncs = append(addFuncs, f.GenerateZsh(builder, argIndent, progName+"_"+name_s)...)
 	}
 
 	if slices.ContainsFunc(addFuncs, func(x *internal.AddFuncZsh) bool { return x != nil }) {

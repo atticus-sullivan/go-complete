@@ -2,6 +2,7 @@ package completeargs
 
 import (
 	"github.com/atticus-sullivan/go-complete/internal"
+	sh "mvdan.cc/sh/v3/syntax"
 	"strings"
 )
 
@@ -14,7 +15,12 @@ func (ca CTalternatives) GenerateBash(builderArguments *strings.Builder, indent 
 			builderArguments.WriteRune(' ')
 		}
 		first = false
-		builderArguments.WriteString(a)
+		s, err := sh.Quote(a, sh.LangBash)
+		if err != nil {
+			// TODO
+			continue
+		}
+		builderArguments.WriteString(s)
 	}
 	builderArguments.WriteString(`" -- "${cur}") )`)
 	builderArguments.WriteRune('\n')

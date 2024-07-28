@@ -24,6 +24,7 @@ func (p *Positional) GenerateZsh(builderArguments *strings.Builder, indent strin
 	}
 	fmt.Fprintf(builderArguments, "%s:", p.Help)
 
+	p.Arg = p.Arg.SetIdxS(p.Idx)
 	add = append(add, p.Arg.GenerateZsh(builderArguments, indent, progName)...)
 	builderArguments.WriteRune('"')
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	sh"mvdan.cc/sh/v3/syntax"
 )
 
 func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
@@ -34,6 +35,12 @@ func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
 // }
 // `)
 
+	name_s, err := sh.Quote(mc.Name, sh.LangBash)
+	if err != nil {
+		// TODO
+		return
+	}
+
 	fmt.Fprintf(builder, `%[1]sfunction _%[2]s {
 %[1]s    local cur prev opts
 %[1]s    COMPREPLY=()
@@ -43,10 +50,10 @@ func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
 
 %[1]s    local positionals=()
 %[1]s    for ((i=1; i<COMP_CWORD; i++)); do
-`, indent, mc.Name, strings.Join(flags, " "))
+`, indent, name_s, strings.Join(flags, " "))
 
 	for _, p := range mc.Positionals {
-		a, i := p.GenerateBash(builder, indent+"        ", mc.Name)
+		a, i := p.GenerateBash(builder, indent+"        ", name_s)
 		addFuncs = append(addFuncs, a...)
 		addIfs = append(addIfs, i...)
 	}
@@ -55,7 +62,7 @@ func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
 	builder.WriteString(`        case "${COMP_WORDS[i]}" in
 `)
 	for _, f := range mc.Flags {
-		a, i := f.GenerateBash(builder, indent+"        ", mc.Name)
+		a, i := f.GenerateBash(builder, indent+"        ", name_s)
 		addFuncs = append(addFuncs, a...)
 		addIfs = append(addIfs, i...)
 	}
@@ -81,7 +88,7 @@ func (mc *MainCompleter) GenerateBash(builder *strings.Builder, indent string) {
 
 	builder.WriteRune('}')
 	builder.WriteRune('\n')
-	fmt.Fprintf(builder, "%[1]scomplete -F _%[2]s %[2]s\n", indent, mc.Name)
+	fmt.Fprintf(builder, "%[1]scomplete -F _%[2]s %[2]s\n", indent, name_s)
 
 	if slices.ContainsFunc(addFuncs, func(x *internal.AddFuncBash) bool { return x != nil }) {
 		builder.WriteRune('\n')

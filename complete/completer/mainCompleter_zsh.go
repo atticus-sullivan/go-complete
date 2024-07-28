@@ -1,25 +1,33 @@
 package completer
 
 import (
-	"github.com/atticus-sullivan/go-complete/internal"
 	"fmt"
 	"slices"
 	"strings"
+
+	"github.com/atticus-sullivan/go-complete/internal"
+	sh "mvdan.cc/sh/v3/syntax"
 )
 
 func (mc *MainCompleter) GenerateZsh(builder *strings.Builder, indent string) {
 	addFuncs := make([]*internal.AddFuncZsh, 0)
 
+	name_s, err := sh.Quote(mc.Name, sh.LangBash)
+	if err != nil {
+		// TODO
+		return
+	}
+
 	fmt.Fprintf(builder, `%[1]sfunction _%[2]s {
 %[1]s    local context state state_descr line opt_args
-%[1]s    _arguments -C :`, indent, mc.Name)
+%[1]s    _arguments -C :`, indent, name_s)
 
 	argIndent := indent + "        "
 	for _, p := range mc.Positionals {
-		addFuncs = append(addFuncs, p.GenerateZsh(builder, argIndent, mc.Name)...)
+		addFuncs = append(addFuncs, p.GenerateZsh(builder, argIndent, name_s)...)
 	}
 	for _, f := range mc.Flags {
-		addFuncs = append(addFuncs, f.GenerateZsh(builder, argIndent, mc.Name)...)
+		addFuncs = append(addFuncs, f.GenerateZsh(builder, argIndent, name_s)...)
 	}
 
 	if slices.ContainsFunc(addFuncs, func(x *internal.AddFuncZsh) bool { return x != nil }) {
@@ -44,7 +52,7 @@ func (mc *MainCompleter) GenerateZsh(builder *strings.Builder, indent string) {
 
 	builder.WriteRune('}')
 	builder.WriteRune('\n')
-	fmt.Fprintf(builder, "%[1]scompdef _%[2]s %[2]s\n", indent, mc.Name)
+	fmt.Fprintf(builder, "%[1]scompdef _%[2]s %[2]s\n", indent, name_s)
 
 	if slices.ContainsFunc(addFuncs, func(x *internal.AddFuncZsh) bool { return x != nil }) {
 		builder.WriteRune('\n')

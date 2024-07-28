@@ -1,8 +1,10 @@
 package completeargs
 
 import (
-	"github.com/atticus-sullivan/go-complete/internal"
 	"strings"
+
+	"github.com/atticus-sullivan/go-complete/internal"
+	sh "mvdan.cc/sh/v3/syntax"
 )
 
 func (cf CTfile) GenerateZsh(builderArguments *strings.Builder, indent string, progName string) []*internal.AddFuncZsh {
@@ -12,9 +14,10 @@ func (cf CTfile) GenerateZsh(builderArguments *strings.Builder, indent string, p
 	} else {
 		builderArguments.WriteString("_files -f")
 	}
-	if cf.Glob != "" {
+	s,err := sh.Quote(cf.Glob, sh.LangBash)
+	if cf.Glob != "" && err != nil {
 		builderArguments.WriteString(" -g '")
-		builderArguments.WriteString(cf.Glob)
+		builderArguments.WriteString(s)
 		builderArguments.WriteString("'")
 	}
 	return nil
