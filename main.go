@@ -48,7 +48,7 @@ func main() {
 										Help:     "colorful output",
 										Args:     []completeargs.CompleteTypeNoSub{
 											completeargs.CTalternatives{
-												Alts: []string{"hello", "world"},
+												Alts: []string{"hel lo", "world"},
 											},
 										},
 										Optional: true,
@@ -77,6 +77,6 @@ func main() {
 	}
 
 	builder := strings.Builder{}
-	c.GenerateZsh(&builder, "")
+	c.GenerateBash(&builder, "")
 	fmt.Println(builder.String())
 }
