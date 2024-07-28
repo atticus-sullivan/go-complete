@@ -1,3 +1,8 @@
+> [!CAUTION]
+> Note that this is still in an experimental state. Certain inputs might break things.
+> If you're still willing to test this, your're more than welcome to help in the
+> development and especially to harden this library against bad inputs / bad use.
+
 # go-complete
 
 Implements support for generating shell (bash+zsh) completion scripts. See this
