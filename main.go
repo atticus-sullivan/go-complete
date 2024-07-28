@@ -77,6 +77,6 @@ func main() {
 	}
 
 	builder := strings.Builder{}
-	c.GenerateBash(&builder, "")
+	c.GenerateAuto(&builder, "")
 	fmt.Println(builder.String())
 }
