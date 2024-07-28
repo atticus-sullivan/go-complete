@@ -1,13 +1,13 @@
 package flag
 
 import (
-	"complete/complete/completeArgs"
+	"github.com/atticus-sullivan/go-complete/complete/completeArgs"
 )
 
 type Flag struct {
 	Short    rune
 	Long     string
 	Help     string
-	Args     []completeargs.CompleteType
+	Args     []completeargs.CompleteTypeNoSub
 	Optional bool
 }

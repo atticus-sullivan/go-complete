@@ -1,12 +1,12 @@
 package positional
 
 import (
-	"complete/complete/completeArgs"
+	"github.com/atticus-sullivan/go-complete/complete/completeArgs"
 )
 
 type Positional struct {
 	Idx      uint
 	Help     string
-	Arg      completeargs.CompleteType
+	Arg      completeargs.CompleteTypeSub
 	Optional bool
 }

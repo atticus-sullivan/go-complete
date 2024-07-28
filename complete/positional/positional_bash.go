@@ -1,7 +1,7 @@
 package positional
 
 import (
-	"complete/internal"
+	"github.com/atticus-sullivan/go-complete/internal"
 	"strings"
 )
 

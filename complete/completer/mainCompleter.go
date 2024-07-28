@@ -1,6 +1,6 @@
 package completer
 
-import "complete/complete/types"
+import "github.com/atticus-sullivan/go-complete/complete/types"
 
 type MainCompleter struct {
 	types.Completer

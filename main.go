@@ -1,11 +1,11 @@
 package main
 
 import (
-	"complete/complete/completer"
-	"complete/complete/completeArgs"
-	"complete/complete/flag"
-	"complete/complete/positional"
-	"complete/complete/types"
+	"github.com/atticus-sullivan/go-complete/complete/completer"
+	"github.com/atticus-sullivan/go-complete/complete/completeArgs"
+	"github.com/atticus-sullivan/go-complete/complete/flag"
+	"github.com/atticus-sullivan/go-complete/complete/positional"
+	"github.com/atticus-sullivan/go-complete/complete/types"
 	"fmt"
 	"strings"
 )
@@ -35,7 +35,7 @@ func main() {
 										Short:    'p',
 										Long:     "path",
 										Help:     "path to file to process",
-										Args:     []completeargs.CompleteType{
+										Args:     []completeargs.CompleteTypeNoSub{
 											completeargs.CTfile{
 												Glob:     "*.yaml",
 												OnlyDirs: false,
@@ -47,7 +47,7 @@ func main() {
 										Short:    'c',
 										Long:     "color",
 										Help:     "colorful output",
-										Args:     []completeargs.CompleteType{
+										Args:     []completeargs.CompleteTypeNoSub{
 											completeargs.CTalternatives{
 												Alts: []string{"hello", "world"},
 											},
@@ -78,6 +78,6 @@ func main() {
 	}
 
 	builder := strings.Builder{}
-	c.GenerateBash(&builder, "")
+	c.GenerateZsh(&builder, "")
 	fmt.Println(builder.String())
 }

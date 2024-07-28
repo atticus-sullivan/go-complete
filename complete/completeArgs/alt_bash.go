@@ -1,7 +1,7 @@
 package completeargs
 
 import (
-	"complete/internal"
+	"github.com/atticus-sullivan/go-complete/internal"
 	"strings"
 )
 

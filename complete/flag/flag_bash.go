@@ -1,7 +1,7 @@
 package flag
 
 import (
-	"complete/internal"
+	"github.com/atticus-sullivan/go-complete/internal"
 	"fmt"
 	"strings"
 )

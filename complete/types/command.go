@@ -1,8 +1,8 @@
 package types
 
 import (
-	"complete/complete/flag"
-	"complete/complete/positional"
+	"github.com/atticus-sullivan/go-complete/complete/flag"
+	"github.com/atticus-sullivan/go-complete/complete/positional"
 )
 
 type Completer struct {
